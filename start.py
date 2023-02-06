@@ -4,6 +4,7 @@ import shutil
 import datetime
 import os
 import tkinter.messagebox
+import Settings
 
 
 # Diese Funktion gibt einen String zurück wo die Nullen für DateTime Elemente hinzugefügt werden
@@ -50,7 +51,7 @@ def copyAndRename(file, destination, date):
     shutil.copyfile(file, destination + filename)  # In dieser Zeile wird die Datei kopiert und dabei umbenannt
 
 
-def start(files: list, destination: str):
+def start(files: list, destination: str, destination2: str):
     datum = ""
 
     # In dieser Schleife wird jede Datei, die ausgewählt ist bearbeitet
@@ -68,11 +69,15 @@ def start(files: list, destination: str):
         if datum != "":
             try:
                 copyAndRename(file, destination, datum)
+                if destination2 != "":
+                    copyAndRename(file, destination2, datum)
             except PermissionError:
                 tkinter.messagebox.showerror(title="Error", message=f"Der zugriff auf die Datei {os.path.basename(file)} wurde verweigert, dies kann daran Liegen das die Datei offen ist! \n Diese Datei wurde deswegen übersprungen!")
         else:
             try:
                 shutil.copyfile(file, f"{destination}/_{os.path.basename(file)}")
+                if destination2 != "":
+                    shutil.copyfile(file, f"{destination2}/_{os.path.basename(file)}")
             except PermissionError:
                 tkinter.messagebox.showerror(title="Error", message=f"Der zugriff auf die Datei {os.path.basename(file)} wurde verweigert, dies kann daran Liegen das die Datei offen ist! \n Diese Datei wurde deswegen übersprungen!")
 

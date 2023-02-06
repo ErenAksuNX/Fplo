@@ -1,24 +1,18 @@
-
-import tkinter as tk
-import tkinter.ttk as ttk
-import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 from start import start
 from tkinter import *
 import webbrowser
+from setting_window import *
 
 
 class Gui:
 
     def __init__(self, master: tk):
-        self.master: tk = master
 
-        self.menu_close = None
+        self.master: tk = master
         self.files = list()
         self.destination = ""
         self.fullscreenBoolean = False
-        self.img_zug = None
-        self.bg_zug = None
         self.img_logo = None
         self.bg_logo = None
         self.destination2 = ""
@@ -64,17 +58,13 @@ class Gui:
         # Hier wird der BG hinzugefügt
         self.master.config(background="#8ec9e9")
 
-        self.img_zug = PhotoImage(file="pic/zuege_freigestellt.png")
-        self.bg_zug = Label(self.master, image=self.img_zug, background='#8ec9e9', anchor="sw")
-        # self.bg_zug.place(relx=.0, rely=1.0, anchor="sw")
-
         self.img_logo = PhotoImage(file="pic/Logo.png")
         self.bg_logo = Label(self.master, image=self.img_logo, background='#8ec9e9', anchor='se')
         self.bg_logo.place(rely=1, relx=1, anchor='se')
 
-        self.lb_Git_Hub = ttk.Label(self.master, text="Drücke hier um die das Projekt einzusehen", background="#8ec9e9", foreground="#0056a4")
-        self.lb_Git_Hub.place(relx=1, rely=0, anchor="ne")
-        self.lb_Git_Hub.bind("<Button-1>", lambda e: webbrowser.open("https://github.com/ErenAK21/Fplo"))
+        lb_Git_Hub = ttk.Label(self.master, text="Drücke hier um das Projekt einzusehen", background="#8ec9e9", foreground="#0056a4")
+        lb_Git_Hub.place(relx=1, rely=0, anchor="ne")
+        lb_Git_Hub.bind("<Button-1>", lambda e: webbrowser.open("https://github.com/ErenAksuNX/Fplo"))
 
         self.Menu()
         self.buttons()
@@ -82,39 +72,42 @@ class Gui:
     def getFiles(self):
         self.files = filedialog.askopenfilenames(
             title="Bitte wählen sie die PDF Dateien aus die sie kopieren und umbenennen.",
-            filetypes=[("PDF-Dateien", "*.pdf"), ("Alle Dateien", "*.*")])
+            filetypes=[("PDF-Dateien", "*.pdf"), ("Alle Dateien", "*.*")], initialdir=get_default_input())
 
     def getDestination(self):
         self.destination = filedialog.askdirectory(
-            title="Bitte wählen sie den Ordner aus in dem die PDF Dateien gespeichert werden sollen.")
+            title="Bitte wählen sie den Ordner aus in dem die PDF Dateien gespeichert werden sollen.", initialdir=get_default_output0())
 
     def getDestination2(self):
         self.destination2 = filedialog.askdirectory(
-            title="Bitte wählen sie den Ordner aus in dem die PDF Dateien gespeichert werden sollen.")
+            title="Bitte wählen sie den Ordner aus in dem die PDF Dateien gespeichert werden sollen.", initialdir=get_default_output1())
 
     def Menu(self):
         # im unteren Teil wird das Menü Designet
-        self.menubar = tk.Menu(self.master)
+        menubar = tk.Menu(self.master)
 
-        self.menu_close = tk.Menu(self.menubar)
-        self.menu_close.add_command()
+        menu_close = tk.Menu(menubar)
+        menu_close.add_command()
 
-        self.menubar = tk.Menu(self.master)
+        menubar = tk.Menu(self.master)
 
-        self.menu_Programm = tk.Menu(self.menubar)
-        self.menubar.add_cascade(menu=self.menu_Programm, label="Programm")
+        menu_Programm = tk.Menu(menubar)
+        menubar.add_cascade(menu=menu_Programm, label="Programm")
 
-        self.menu_close = tk.Menu(self.menu_Programm)
-        self.menu_Programm.add_cascade(label="Programm schließen", command=self.programmSchliessen)
+        menu_Programm.add_cascade(label="Programm schließen", command=self.programmSchliessen)
 
-        self.menu_help = tk.Menu(self.menubar)
+        menu_Programm.add_cascade(label="Einstellungen", command=self.einstellungen)
 
-        self.menubar.add_cascade(label="Hilfe", command=help_window)
+        menubar.add_cascade(label="Hilfe", command=help_window)
 
-        self.master.config(menu=self.menubar)
+        self.master.config(menu=menubar)
 
     def programmSchliessen(self):
         self.master.destroy()
+
+    def einstellungen(self):
+        self.master.iconify()
+        Setting_Window(self.master)
 
 
 def help_window():
